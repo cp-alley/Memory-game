@@ -1,0 +1,27 @@
+#game div {
+  border: 1px solid black;
+  width: 100px;
+  height: 100px;
+  margin: 20px;
+  display: inline-block;
+}
+
+.flip.red {
+  background-color: red;
+}
+
+.flip.orange {
+  background-color: orange;
+}
+
+.flip.green {
+  background-color: green;
+}
+
+.flip.blue {
+  background-color: blue;
+}
+
+.flip.purple {
+  background-color: purple;
+}
