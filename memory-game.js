@@ -1,14 +1,68 @@
 /** Memory game: find matching pairs of cards and flip both of them. */
+const gameArea = document.querySelector('.game-area')
+
+let testFront = 'assets/violin.png'
+let testBack = 'assets/music-notes.png'
+
+function createCards(frontImgSrc, backImgSrc) {
+  const cardElem = createElement('div')
+  const cardInner = createElement('div')
+  const cardFront = createElement('img')
+  const cardBack = createElement('img')
+
+  addClassToElement(cardElem, 'game-card')
+  addClassToElement(cardInner, 'game-card-inner')
+  addClassToElement(cardFront, 'front-face')
+  addClassToElement(cardBack, 'back-face')
+
+  addImgSrc(cardFront, frontImgSrc)
+  addImgSrc(cardBack, backImgSrc)
+
+  addChildElement(cardInner, cardFront)
+  addChildElement(cardInner, cardBack)
+  addChildElement(cardElem, cardInner)
+  addChildElement(gameArea, cardElem)
+}
+
+for (let i = 0; i < 16; i++) {
+  createCards(testFront, testBack)
+}
+
+
+function createElement(elemType) {
+  return document.createElement(elemType)
+}
+
+function addClassToElement(elem, className) {
+  elem.classList.add(className)
+}
+
+function addImgSrc(elem, src) {
+  elem.src = src
+}
+
+function addChildElement(parentElem, childElem) {
+  parentElem.append(childElem)
+}
+
+const cards = document.querySelectorAll('.game-card')
+
+function flip(e){
+  // this.children[0].classList.toggle('flipped')
+  e.target.parentElement.classList.toggle('flipped')
+}
+
+cards.forEach(card => card.addEventListener('click', flip))
 
 const FOUND_MATCH_WAIT_MSECS = 1000;
-const COLORS = [
-  "red", "blue", "green", "orange", "purple",
-  "red", "blue", "green", "orange", "purple",
-];
+// const COLORS = [
+//   "red", "blue", "green", "orange", "purple",
+//   "red", "blue", "green", "orange", "purple",
+// ];
 
-const colors = shuffle(COLORS);
+// const colors = shuffle(COLORS);
 
-createCards(colors);
+// createCards(colors);
 
 
 /** Shuffle array items in-place and return shuffled array. */
@@ -29,25 +83,18 @@ function shuffle(items) {
   return items;
 }
 
-/** Create card for every color in colors (each will appear twice)
- *
- * Each div DOM element will have:
- * - a class with the value of the color
- * - a click event listener for each card to handleCardClick
- */
+// function createCards(colors) {
+//   const gameBoard = document.getElementById("game");
 
-function createCards(colors) {
-  const gameBoard = document.getElementById("game");
-
-  for (let color of colors) {
-    // missing code here ...
-    const card = document.createElement('div');
-    card.classList.add(color);
-    card.addEventListener('click', handleCardClick);
-    gameBoard.append(card);
-  }
-  return gameBoard;
-}
+//   for (let color of colors) {
+//     // missing code here ...
+//     const card = document.createElement('div');
+//     card.classList.add(color);
+//     card.addEventListener('click', handleCardClick);
+//     gameBoard.append(card);
+//   }
+//   return gameBoard;
+// }
 
 /** Flip a card face-up. */
 
