@@ -60,19 +60,24 @@ function flipCard(card) {
 
 function unFlipCard(card1, card2) {
   // ... you need to write this ...
+  lockBoard = true;
   setTimeout(() => {
     card1.classList.remove('flip');
     card2.classList.remove('flip');
+    lockBoard = false;
   }, FOUND_MATCH_WAIT_MSECS);
 }
 
 /** Handle clicking on a card: this could be first-card or second-card. */
 
 let hasFlippedCard = false;
+let lockBoard = false;
 let firstCard, secondCard;
 
 function handleCardClick(evt) {
   // ... you need to write this ...
+  if (lockBoard) return; //prevent spam clicks, returns function until cards are unflipped
+  if (evt.target === firstCard) return; //prevent clicking on same card twice
   flipCard(evt.target)
 
   if (!hasFlippedCard) {
