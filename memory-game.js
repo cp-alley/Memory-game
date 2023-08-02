@@ -1,10 +1,56 @@
-/** Memory game: find matching pairs of cards and flip both of them. */
+const deckOfCards = [
+  {id: 1, imgPath: 'assets/bassoon.png'},
+  {id: 2, imgPath: 'assets/cello.png'},
+  {id: 3, imgPath: 'assets/clarinet.png'},
+  {id: 4, imgPath: 'assets/double-bass.png'},
+  {id: 5, imgPath: 'assets/flute.png'},
+  {id: 6, imgPath: 'assets/french-horn.png'},
+  {id: 7, imgPath: 'assets/grand-piano.png'},
+  {id: 8, imgPath: 'assets/harp.png'},
+  {id: 9, imgPath: 'assets/marimba.png'},
+  {id: 10, imgPath: 'assets/oboe.png'},
+  {id: 11, imgPath: 'assets/timpani.png'},
+  {id: 12, imgPath: 'assets/triangle.png'},
+  {id: 13, imgPath: 'assets/trombone.png'},
+  {id: 14, imgPath: 'assets/trumpet.png'},
+  {id: 15, imgPath: 'assets/violin.png'},
+  {id: 16, imgPath: 'assets/xylophone.png'}
+]
+const cardBackImgPath = 'assets/music-notes.png'
+
 const gameArea = document.querySelector('.game-area')
+const gameDeck = []
+let gameSize = 16 //may add way to change dynamically in future
 
-let testFront = 'assets/violin.png'
-let testBack = 'assets/music-notes.png'
+createGame();
 
-function createCards(frontImgSrc, backImgSrc) {
+function createGame() {
+  shuffle(deckOfCards);
+  makeGameDeck(deckOfCards, gameSize);
+  for (let i = 0; i < gameDeck.length; i++) {
+    createCards(gameDeck[i].imgPath, cardBackImgPath, gameDeck[i].id)
+  }
+}
+
+function shuffle(items) {
+  for (let i = items.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * i);
+    [items[i], items[j]] = [items[j], items[i]];
+  }
+  return items;
+}
+
+function makeGameDeck(deck, numOfCards){
+  const drawCards = deck.slice(0, numOfCards/2)
+  for (let card of drawCards) {
+    gameDeck.push(card)
+    gameDeck.push(card)
+  }
+  shuffle(gameDeck)
+  return gameDeck
+}
+
+function createCards(frontImgSrc, backImgSrc, instrumentId) {
   const cardElem = createElement('div')
   const cardInner = createElement('div')
   const cardFront = createElement('img')
@@ -15,6 +61,8 @@ function createCards(frontImgSrc, backImgSrc) {
   addClassToElement(cardFront, 'front-face')
   addClassToElement(cardBack, 'back-face')
 
+  addDataAttribute(cardElem, instrumentId)
+
   addImgSrc(cardFront, frontImgSrc)
   addImgSrc(cardBack, backImgSrc)
 
@@ -24,17 +72,16 @@ function createCards(frontImgSrc, backImgSrc) {
   addChildElement(gameArea, cardElem)
 }
 
-for (let i = 0; i < 16; i++) {
-  createCards(testFront, testBack)
-}
-
-
 function createElement(elemType) {
   return document.createElement(elemType)
 }
 
 function addClassToElement(elem, className) {
   elem.classList.add(className)
+}
+
+function addDataAttribute(elem, instrumentId) {
+  elem.setAttribute('data-instrument', instrumentId)
 }
 
 function addImgSrc(elem, src) {
@@ -47,98 +94,57 @@ function addChildElement(parentElem, childElem) {
 
 const cards = document.querySelectorAll('.game-card')
 
-function flip(e){
-  // this.children[0].classList.toggle('flipped')
-  e.target.parentElement.classList.toggle('flipped')
-}
-
-cards.forEach(card => card.addEventListener('click', flip))
-
-const FOUND_MATCH_WAIT_MSECS = 1000;
-// const COLORS = [
-//   "red", "blue", "green", "orange", "purple",
-//   "red", "blue", "green", "orange", "purple",
-// ];
-
-// const colors = shuffle(COLORS);
-
-// createCards(colors);
-
-
-/** Shuffle array items in-place and return shuffled array. */
-
-function shuffle(items) {
-  // This algorithm does a "perfect shuffle", where there won't be any
-  // statistical bias in the shuffle (many naive attempts to shuffle end up not
-  // be a fair shuffle). This is called the Fisher-Yates shuffle algorithm; if
-  // you're interested, you can learn about it, but it's not important.
-
-  for (let i = items.length - 1; i > 0; i--) {
-    // generate a random index between 0 and i
-    let j = Math.floor(Math.random() * i);
-    // swap item at i <-> item at j
-    [items[i], items[j]] = [items[j], items[i]];
-  }
-
-  return items;
-}
-
-// function createCards(colors) {
-//   const gameBoard = document.getElementById("game");
-
-//   for (let color of colors) {
-//     // missing code here ...
-//     const card = document.createElement('div');
-//     card.classList.add(color);
-//     card.addEventListener('click', handleCardClick);
-//     gameBoard.append(card);
-//   }
-//   return gameBoard;
-// }
-
-/** Flip a card face-up. */
-
-function flipCard(card) {
-  // ... you need to write this ...
-  card.classList.add('flip');
-}
-
-/** Flip a card face-down. */
-
-function unFlipCard(card1, card2) {
-  // ... you need to write this ...
-  lockBoard = true;
-  setTimeout(() => {
-    card1.classList.remove('flip');
-    card2.classList.remove('flip');
-    lockBoard = false;
-  }, FOUND_MATCH_WAIT_MSECS);
-}
-
-/** Handle clicking on a card: this could be first-card or second-card. */
-
 let hasFlippedCard = false;
 let lockBoard = false;
 let firstCard, secondCard;
 
-function handleCardClick(evt) {
-  // ... you need to write this ...
-  if (lockBoard) return; //prevent spam clicks, returns function until cards are unflipped
-  if (evt.target === firstCard) return; //prevent clicking on same card twice
-  flipCard(evt.target)
+function flipCard() {
+  if (lockBoard) return;
+  if (this === firstCard) return;
+
+  this.firstChild.classList.add('flipped');
 
   if (!hasFlippedCard) {
     hasFlippedCard = true;
-    firstCard = evt.target;
-  } else {
-    hasFlippedCard = false;
-    secondCard = evt.target;
-    if (firstCard.className === secondCard.className) {
-      console.log('You found a match');
-      firstCard.removeEventListener('click', handleCardClick);
-      secondCard.removeEventListener('click', handleCardClick);
-    } else {
-      unFlipCard(firstCard, secondCard);
-    }
+    firstCard = this;
+
+    return;
   }
+  hasFlippedCard = false;
+  secondCard = this;
+
+  checkCardsForMatch();
 }
+
+function checkCardsForMatch() {
+  let isMatch = firstCard.dataset.instrument === secondCard.dataset.instrument
+
+  isMatch ? disableMatchedCards() : unFlipCards();
+}
+
+function disableMatchedCards() {
+  firstCard.removeEventListener('click', flipCard);
+  secondCard.removeEventListener('click', flipCard);
+
+  resetEvents();
+}
+
+function unFlipCards() {
+  lockBoard = true;
+
+  setTimeout(() => {
+    firstCard.firstChild.classList.remove('flipped');
+    secondCard.firstChild.classList.remove('flipped');
+
+    resetEvents();
+  }, 1000);
+}
+
+function resetEvents() {
+  lockBoard = false;
+  hasFlippedCard = false;
+  firstCard = null;
+  secondCard = null;
+}
+
+cards.forEach(card => card.addEventListener('click', flipCard))
