@@ -19,8 +19,10 @@ const deckOfCards = [
 const cardBackImgPath = 'assets/music-notes.png'
 
 const gameArea = document.querySelector('.game-area')
+const scoreBoard = document.getElementById('score')
 const gameDeck = []
 let gameSize = 20 //may add way to change dynamically in future
+let scoreCounter = 0
 
 createGame();
 
@@ -106,6 +108,7 @@ function flipCard() {
   if (this === firstCard) return;
 
   this.firstChild.classList.add('flipped');
+  scoreKeeper();
 
   if (!hasFlippedCard) {
     hasFlippedCard = true;
@@ -119,13 +122,18 @@ function flipCard() {
   checkCardsForMatch();
 }
 
+function scoreKeeper() {
+  scoreCounter++;
+  scoreBoard.innerText = scoreCounter;
+}
+
 function checkCardsForMatch() {
   let isMatch = firstCard.dataset.instrument === secondCard.dataset.instrument
 
-  isMatch ? disableMatchedCards() : unFlipCards();
+  isMatch ? handleMatchedCards() : unFlipCards();
 }
 
-function disableMatchedCards() {
+function handleMatchedCards() {
   firstCard.removeEventListener('click', flipCard);
   secondCard.removeEventListener('click', flipCard);
 
