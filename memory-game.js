@@ -20,7 +20,7 @@ const cardBackImgPath = 'assets/music-notes.png'
 
 const gameArea = document.querySelector('.game-area')
 const gameDeck = []
-let gameSize = 16 //may add way to change dynamically in future
+let gameSize = 20 //may add way to change dynamically in future
 
 createGame();
 
@@ -53,19 +53,22 @@ function makeGameDeck(deck, numOfCards){
 function createCards(frontImgSrc, backImgSrc, instrumentId) {
   const cardElem = createElement('div')
   const cardInner = createElement('div')
-  const cardFront = createElement('img')
+  const cardFront = createElement('div')
   const cardBack = createElement('img')
+  const cardImg = createElement('img')
 
   addClassToElement(cardElem, 'game-card')
   addClassToElement(cardInner, 'game-card-inner')
   addClassToElement(cardFront, 'front-face')
   addClassToElement(cardBack, 'back-face')
+  addClassToElement(cardImg, 'card-img')
 
   addDataAttribute(cardElem, instrumentId)
 
-  addImgSrc(cardFront, frontImgSrc)
+  addImgSrc(cardImg, frontImgSrc)
   addImgSrc(cardBack, backImgSrc)
 
+  addChildElement(cardFront, cardImg)
   addChildElement(cardInner, cardFront)
   addChildElement(cardInner, cardBack)
   addChildElement(cardElem, cardInner)
@@ -125,6 +128,9 @@ function checkCardsForMatch() {
 function disableMatchedCards() {
   firstCard.removeEventListener('click', flipCard);
   secondCard.removeEventListener('click', flipCard);
+
+  firstCard.classList.add('match')
+  secondCard.classList.add('match')
 
   resetEvents();
 }

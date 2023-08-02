@@ -63,3 +63,24 @@ body {
 .front-face {
   transform: rotateY(180deg);
 }
+
+.card-img {
+  width: 100%;
+  height: 100%;
+}
+
+.game-card.match .card-img {
+  animation: teeter 1s linear 1 500ms;
+}
+
+@keyframes teeter {
+  0%, 100% {
+    transform: rotate(0);
+  }
+  25% {
+    transform: rotate(-30deg);
+  }
+  75% {
+    transform: rotate(30deg);
+  }
+}
