@@ -18,22 +18,43 @@ const deckOfCards = [
 ]
 const cardBackImgPath = 'assets/music-notes.png'
 
-const gameArea = document.querySelector('.game-area')
-const scoreBoard = document.getElementById('score')
-const overlays = document.getElementsByClassName('overlay')
-const victoryScreen = document.getElementById('victory')
-const gameDeck = []
-let gameSize = 16 //may add way to change dynamically in future
-let scoreCounter = 0
-let numberMatched = 0
+const gameArea = document.querySelector('.game-area');
+const scoreBoard = document.getElementById('score');
+const overlays = document.getElementsByClassName('overlay');
+const victoryScreen = document.getElementById('victory');
 
-for (let overlay of overlays) {
-  overlay.addEventListener('click', () => {
-    overlay.classList.remove('visible');
-  });
-}
+let gameDeck = [];
+let gameSize = 16; //may add way to change dynamically in future
+let scoreCounter = 0;
+let numberMatched = 0;
+let hasFlippedCard = false;
+let lockBoard = false;
+let firstCard, secondCard;
 
 createGame();
+
+function createOverlays() {
+  for (let overlay of overlays) {
+    overlay.addEventListener('click', () => {
+      overlay.classList.remove('visible');
+      resetGame();
+      createGame();
+    });
+  }
+}
+
+function resetGame() {
+  const cards = document.querySelectorAll('.game-card')
+  for (let card of cards) {
+    card.remove();
+  }
+  gameDeck = []
+  scoreCounter = 0;
+  numberMatched = 0;
+  scoreBoard.innerText = 0;
+
+  resetEvents();
+}
 
 function createGame() {
   shuffle(deckOfCards);
@@ -41,6 +62,7 @@ function createGame() {
   for (let i = 0; i < gameDeck.length; i++) {
     createCards(gameDeck[i].imgPath, cardBackImgPath, gameDeck[i].id)
   }
+  createOverlays();
 }
 
 function shuffle(items) {
@@ -84,6 +106,8 @@ function createCards(frontImgSrc, backImgSrc, instrumentId) {
   addChildElement(cardInner, cardBack)
   addChildElement(cardElem, cardInner)
   addChildElement(gameArea, cardElem)
+
+  addClickHandler(cardElem)
 }
 
 function createElement(elemType) {
@@ -106,11 +130,9 @@ function addChildElement(parentElem, childElem) {
   parentElem.append(childElem)
 }
 
-const cards = document.querySelectorAll('.game-card')
-
-let hasFlippedCard = false;
-let lockBoard = false;
-let firstCard, secondCard;
+function addClickHandler(card) {
+  card.addEventListener('click', flipCard)
+}
 
 function flipCard() {
   if (lockBoard) return;
@@ -146,16 +168,20 @@ function handleMatchedCards() {
   firstCard.removeEventListener('click', flipCard);
   secondCard.removeEventListener('click', flipCard);
 
-  firstCard.classList.add('match')
-  secondCard.classList.add('match')
+  firstCard.classList.add('match');
+  secondCard.classList.add('match');
 
+  checkForWin();
+
+  resetEvents();
+}
+
+function checkForWin() {
   numberMatched++;
   if (numberMatched === gameSize/2) {setTimeout(() => {
     victoryScreen.classList.add('visible');
     }, 1700);
   }
-
-  resetEvents();
 }
 
 function unFlipCards() {
@@ -175,5 +201,3 @@ function resetEvents() {
   firstCard = null;
   secondCard = null;
 }
-
-cards.forEach(card => card.addEventListener('click', flipCard))
