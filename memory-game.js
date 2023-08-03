@@ -20,6 +20,7 @@ const cardBackImgPath = 'assets/music-notes.png'
 
 const gameArea = document.querySelector('.game-area');
 const scoreBoard = document.getElementById('score');
+const highScoreBoard = document.getElementById('high-score');
 const overlays = document.getElementsByClassName('overlay');
 const victoryScreen = document.getElementById('victory');
 
@@ -52,6 +53,9 @@ function resetGame() {
   scoreCounter = 0;
   numberMatched = 0;
   scoreBoard.innerText = 0;
+  if (localStorage["high-score"]) {
+    highScoreBoard.innerText = localStorage["high-score"]
+  }
 
   resetEvents();
 }
@@ -180,7 +184,18 @@ function checkForWin() {
   numberMatched++;
   if (numberMatched === gameSize/2) {setTimeout(() => {
     victoryScreen.classList.add('visible');
+    setHighScore();
     }, 1700);
+  }
+}
+
+function setHighScore() {
+  const highScore = localStorage.getItem("high-score")
+  if (highScore === null) {
+    localStorage.setItem("high-score", scoreCounter)
+  } else if (scoreCounter < highScore) {
+    localStorage["high-score"] = scoreCounter;
+    highScoreBoard.innerText = localStorage["high-score"];
   }
 }
 
