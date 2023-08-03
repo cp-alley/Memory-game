@@ -20,9 +20,18 @@ const cardBackImgPath = 'assets/music-notes.png'
 
 const gameArea = document.querySelector('.game-area')
 const scoreBoard = document.getElementById('score')
+const overlays = document.getElementsByClassName('overlay')
+const victoryScreen = document.getElementById('victory')
 const gameDeck = []
-let gameSize = 20 //may add way to change dynamically in future
+let gameSize = 16 //may add way to change dynamically in future
 let scoreCounter = 0
+let numberMatched = 0
+
+for (let overlay of overlays) {
+  overlay.addEventListener('click', () => {
+    overlay.classList.remove('visible');
+  });
+}
 
 createGame();
 
@@ -108,7 +117,6 @@ function flipCard() {
   if (this === firstCard) return;
 
   this.firstChild.classList.add('flipped');
-  scoreKeeper();
 
   if (!hasFlippedCard) {
     hasFlippedCard = true;
@@ -119,6 +127,7 @@ function flipCard() {
   hasFlippedCard = false;
   secondCard = this;
 
+  scoreKeeper();
   checkCardsForMatch();
 }
 
@@ -139,6 +148,12 @@ function handleMatchedCards() {
 
   firstCard.classList.add('match')
   secondCard.classList.add('match')
+
+  numberMatched++;
+  if (numberMatched === gameSize/2) {setTimeout(() => {
+    victoryScreen.classList.add('visible');
+    }, 1700);
+  }
 
   resetEvents();
 }
