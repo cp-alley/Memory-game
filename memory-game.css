@@ -11,6 +11,14 @@ body {
   justify-content: center;
   align-items: center;
   background-color:cornflowerblue;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.score-container {
+  display: flex;
+  width: 80%;
+  max-width: 640px;
+  justify-content: space-between;
 }
 
 .overlay {
@@ -24,11 +32,12 @@ body {
   align-items: center;
   flex-wrap: wrap;
   z-index: 3;
-  font-size: 5em;
-  font-family: Arial, Helvetica, sans-serif;
+  font-size: 2em;
   font-weight: bold;
+  text-shadow: 2px 2px rgba(0, 0, 0, 0.2);
   text-align: center;
-  letter-spacing: .1em;
+  cursor: pointer;
+
 }
 
 .overlay.visible {
@@ -39,17 +48,19 @@ body {
 
 @keyframes fade {
   from {
-    background-color: rgba(255, 255, 255, 0);
+    background-color: rgba(248, 248, 255, 0);
   }
   to {
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(248, 248, 255, 0.9);
   }
 }
 
 .game-area {
-  width: 640px;
-  height: 640px;
-  margin: auto;
+  max-width: 640px;
+  max-height: 640px;
+  width: 80vw;
+  height: 80vw;
+  margin: 0 auto;
   display: flex;
   flex-wrap: wrap;
   perspective: 1000px;
@@ -89,7 +100,7 @@ body {
   height: 100%;
   padding: 10px;
   border-radius: 5px;
-  background-color: cornsilk;
+  background-color: rgb(255, 248, 220);
   position: absolute;
   backface-visibility: hidden;
 }
@@ -108,13 +119,23 @@ body {
 }
 
 @keyframes teeter {
-  0%, 100% {
-    transform: rotate(0);
+  0%, 100%{
+    transform: rotate(0deg);
   }
   25% {
-    transform: rotate(-30deg);
+    transform: rotate(-10deg);
   }
   75% {
-    transform: rotate(30deg);
+    transform: rotate(10deg);
   }
+}
+
+footer {
+  position: relative;
+  bottom: 0;
+  padding: 10px;
+}
+
+footer a {
+  color: black;
 }
