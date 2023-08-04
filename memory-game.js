@@ -21,26 +21,27 @@ const cardBackImgPath = 'assets/music-notes.png'
 const gameArea = document.querySelector('.game-area');
 const scoreBoard = document.getElementById('score');
 const highScoreBoard = document.getElementById('high-score');
-const overlays = document.getElementsByClassName('overlay');
 const victoryScreen = document.getElementById('victory');
+const heading = document.querySelector('h1')
 
 let gameDeck = [];
 let gameSize = 16; //may add way to change dynamically in future
 let scoreCounter = 0;
 let numberMatched = 0;
-let hasFlippedCard = false;
+let isSecondCard = false;
 let lockBoard = false;
 let firstCard, secondCard;
 
 createGame();
 
-function createOverlays() {
-  for (let overlay of overlays) {
-    overlay.addEventListener('click', () => {
-      overlay.classList.remove('visible');
+function addButtonHandlers() {
+  const buttons = document.getElementsByClassName('button')
+  for (let button of buttons) {
+    button.addEventListener('click', function() {
+      button.classList.add('hidden');
       resetGame();
       createGame();
-    });
+    })
   }
 }
 
@@ -53,6 +54,8 @@ function resetGame() {
   scoreCounter = 0;
   numberMatched = 0;
   scoreBoard.innerText = 0;
+  heading.innerText = "Match the Instruments!"
+  heading.classList.remove('win')
   if (localStorage["high-score"]) {
     highScoreBoard.innerText = localStorage["high-score"]
   }
@@ -66,7 +69,7 @@ function createGame() {
   for (let i = 0; i < gameDeck.length; i++) {
     createCards(gameDeck[i].imgPath, cardBackImgPath, gameDeck[i].id)
   }
-  createOverlays();
+  addButtonHandlers();
 }
 
 function shuffle(items) {
@@ -144,13 +147,13 @@ function flipCard() {
 
   this.firstChild.classList.add('flipped');
 
-  if (!hasFlippedCard) {
-    hasFlippedCard = true;
+  if (!isSecondCard) {
+    isSecondCard = true;
     firstCard = this;
 
     return;
   }
-  hasFlippedCard = false;
+  isSecondCard = false;
   secondCard = this;
 
   scoreKeeper();
@@ -183,8 +186,12 @@ function handleMatchedCards() {
 function checkForWin() {
   numberMatched++;
   if (numberMatched === gameSize/2) {setTimeout(() => {
-    victoryScreen.classList.add('visible');
+    victoryScreen.classList.remove('hidden');
+
     setHighScore();
+
+    heading.innerText = "You win!"
+    heading.classList.add('win')
     }, 1700);
   }
 }
@@ -212,7 +219,7 @@ function unFlipCards() {
 
 function resetEvents() {
   lockBoard = false;
-  hasFlippedCard = false;
+  isSecondCard = false;
   firstCard = null;
   secondCard = null;
 }

@@ -7,18 +7,14 @@
   <link rel="stylesheet" href="memory-game.css"/>
 </head>
 <body>
-  <div class="overlay visible">
-    <h1>Match the Instruments!</h1>
-    <span>Click to Start</span>
-  </div>
+  <h1>Match the Instruments!</h1>
   <div class="score-container">
     <h2>Score: <span id="score">0</span></h2>
     <h2>Best Score: <span id="high-score">50</span></h2>
   </div>
-  <div class="overlay" id="victory">
-    <h2>You win!</h2>
-    <span>Click to play again</span></div>
   <section class="game-area" id="game">
+    <div class="button"><button>Start Game</button></div>
+    <div class="button hidden" id="victory"><button>Play Again</button></div>
   </section>
   <footer>
     <a href="https://www.flaticon.com/free-icons/music" title="music icons">Music icons created by Freepik - Flaticon</a>
